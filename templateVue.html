@@ -1,0 +1,87 @@
+<!-- index.php -->
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Vue hors ligne - Version complète</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+      }
+      ul {
+        list-style-type: square;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <h1>{{ titre }}</h1>
+      <p><strong>Date du jour :</strong> {{ dateActuelle }}</p>
+
+      <input
+        type="text"
+        v-model="nouvelElement"
+        placeholder="Ajouter un élément"
+      />
+      <button @click="ajouterElement">Ajouter</button>
+
+      <ul>
+        <li v-for="(element, index) in liste" :key="index">
+          {{ index + 1 }}. {{ element }}
+          <button @click="supprimerElement(index)">❌</button>
+        </li>
+      </ul>
+
+      <p v-if="liste.length === 0">La liste est vide pour le moment.</p>
+
+      <p><strong>Total d'éléments :</strong> {{ nombreElements }}</p>
+    </div>
+
+    <!-- Vue.js local -->
+    <script src="js/vue.global.js"></script>
+
+    <script>
+      const { createApp } = Vue;
+
+      createApp({
+        data() {
+          return {
+            titre: "Bienvenue dans mon app Vue.js locale",
+            liste: [
+              "Apprendre Vue.js",
+              "Coder un projet PHP",
+              "Boire un café ☕",
+            ],
+            nouvelElement: "",
+            dateActuelle: "",
+          };
+        },
+        computed: {
+          nombreElements() {
+            return this.liste.length;
+          },
+        },
+        methods: {
+          ajouterElement() {
+            if (this.nouvelElement.trim() !== "") {
+              this.liste.push(this.nouvelElement.trim());
+              this.nouvelElement = "";
+            }
+          },
+          supprimerElement(index) {
+            this.liste.splice(index, 1);
+          },
+          chargerDate() {
+            const date = new Date();
+            this.dateActuelle = date.toLocaleString();
+          },
+        },
+        mounted() {
+          this.chargerDate();
+          console.log("L'application Vue est montée !");
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
