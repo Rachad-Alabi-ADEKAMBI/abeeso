@@ -1,3 +1,24 @@
+<?php
+
+ini_set("display_errors", "off");
+
+session_start();
+
+// Check if the user is not logged in (i.e., if $_SESSION['login'] does not exist)
+if (isset($_SESSION['user'])) {
+?>
+  <script>
+    //  alert('Veuillez vous connecter d\'abord');
+    window.location.replace('dashboard.php');
+  </script>
+<?php
+  // Exit to stop further execution of the script after the redirect
+  exit();
+}
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -14,7 +35,7 @@
   <?php include 'header.php'; ?>
 
   <!-- Login Section -->
-  <section class="login-section">
+  <section class="login-section" id="app">
     <div class="login-container">
       <div class="login-card">
         <div class="login-header">
@@ -25,17 +46,18 @@
           <p>Accédez à votre espace personnel</p>
         </div>
 
-        <form class="login-form" id="login-form">
+        <form method="post" action="api/api.php?action=register"
+          class="login-form" id="login-form">
           <div class="form-group">
             <label for="username"><i class="fas fa-user"></i> Nom d'utilisateur</label>
-            <input type="text" id="username" name="username" required>
-            <div class="form-error" id="username-error"></div>
+            <input type="text" id="username" name="username" value="<?= $_SESSION['login']['username'] ?>" required>
+
           </div>
 
           <div class="form-group">
             <label for="password"><i class="fas fa-lock"></i> Mot de passe</label>
             <div class="password-input-container">
-              <input type="password" id="password" name="password" required>
+              <input v-model="password" type="password" id="password" name="password" required />
               <button type="button" class="toggle-password" id="toggle-password">
                 <i class="fas fa-eye"></i>
               </button>
@@ -78,6 +100,12 @@
 
   <script src="script.js"></script>
   <script src="login.js"></script>
+
+
+  <!-- Vue.js local -->
+  <script src="vue.global.js"></script>
+
+
 </body>
 
 </html>

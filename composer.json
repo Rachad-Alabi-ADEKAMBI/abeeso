@@ -1,0 +1,17 @@
+{
+    "name": "hp/african4",
+    "autoload": {
+        "psr-4": {
+            "Hp\\African4\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "rachad-alabi-adekambi",
+            "email": "adekambirachad@gmail.com"
+        }
+    ],
+    "require": {
+        "endroid/qr-code": "^6.0"
+    }
+}

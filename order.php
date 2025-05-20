@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commander - Soirée Culturelle Africaine</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="dashboard.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container">
+      <div class="logo">
+        <i class="fas fa-drum"></i> ABEESO
+      </div>
+      <ul class="nav-links">
+        <li><a href="index.html"><i class="fas fa-home"></i> Accueil</a></li>
+        <li><a href="index.html#a-propos"><i class="fas fa-info-circle"></i> À propos</a></li>
+        <li><a href="index.html#menu"><i class="fas fa-utensils"></i> Menu</a></li>
+        <li><a href="index.html#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+        <li><a href="login.html"><i class="fas fa-user"></i> Connexion</a></li>
+        <li><a href="commande.html" class="active"><i class="fas fa-shopping-cart"></i> Commander</a></li>
+        <li><a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      </ul>
+      <div class="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Order Form Section -->
+  <section class="order-section">
+    <div class="container">
+      <h2 class="section-title"><i class="fas fa-utensils"></i> Commander</h2>
+
+      <div class="order-container">
+        <div class="order-card">
+          <div class="order-header">
+            <h3><i class="fas fa-clipboard-list"></i> Formulaire de Commande</h3>
+            <p>Commandez vos plats et boissons pour la soirée</p>
+          </div>
+
+          <form id="order-form" class="order-form">
+            <div class="form-group">
+              <label for="food-name"><i class="fas fa-hamburger"></i> Nom du plat/boisson</label>
+              <select id="food-name" name="food-name" required>
+                <option value="" disabled selected>Sélectionnez un plat ou une boisson</option>
+                <optgroup label="Plats">
+                  <option value="Brochette de boeuf">Brochette de boeuf</option>
+                  <option value="Poisson Daurade braisé">Poisson Daurade braisé</option>
+                  <option value="Cuisse de poulet">Cuisse de poulet</option>
+                  <option value="Monyo">Monyo (Poulet, Poisson, Aileron)</option>
+                </optgroup>
+                <optgroup label="Accompagnements">
+                  <option value="Ablo">Ablo</option>
+                  <option value="Alloco">Alloco</option>
+                  <option value="Akassa">Akassa</option>
+                  <option value="Riz blanc">Riz blanc</option>
+                </optgroup>
+                <optgroup label="Boissons sans alcool">
+                  <option value="Café">Café</option>
+                  <option value="Eau 50cl">Eau 50cl</option>
+                  <option value="Jus de Fruits">Jus de Fruits</option>
+                  <option value="Soda">Soda (Coca, Fanta)</option>
+                  <option value="Energy Drink">Energy Drink / Panaché</option>
+                  <option value="Jus de Bissape">Jus de Bissape</option>
+                  <option value="Jus de Gingembre">Jus de Gingembre</option>
+                </optgroup>
+                <optgroup label="Boissons avec alcool">
+                  <option value="Heineken">Heineken</option>
+                  <option value="Desperados">Desperados</option>
+                  <option value="Guinness">Guinness</option>
+                  <option value="Vodka">Vodka, Whisky</option>
+                  <option value="Vin Muscador">Vin Muscador</option>
+                </optgroup>
+              </select>
+              <div class="form-error" id="food-name-error"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="quantity"><i class="fas fa-sort-amount-up-alt"></i> Quantité</label>
+              <div class="quantity-input">
+                <button type="button" class="quantity-btn minus"><i class="fas fa-minus"></i></button>
+                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
+                <button type="button" class="quantity-btn plus"><i class="fas fa-plus"></i></button>
+              </div>
+              <div class="form-error" id="quantity-error"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="ticket-number"><i class="fas fa-ticket-alt"></i> Numéro de billet</label>
+              <input type="text" id="ticket-number" name="ticket-number" placeholder="Ex: A123" required>
+              <div class="form-error" id="ticket-number-error"></div>
+            </div>
+
+            <div class="order-summary">
+              <h4><i class="fas fa-receipt"></i> Récapitulatif</h4>
+              <div class="summary-item">
+                <span>Article:</span>
+                <span id="summary-item">-</span>
+              </div>
+              <div class="summary-item">
+                <span>Quantité:</span>
+                <span id="summary-quantity">1</span>
+              </div>
+              <div class="summary-item">
+                <span>Prix unitaire:</span>
+                <span id="summary-price">-</span>
+              </div>
+              <div class="summary-item total">
+                <span>Total:</span>
+                <span id="summary-total">-</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary order-btn">
+              <i class="fas fa-paper-plane"></i> Envoyer la commande
+            </button>
+          </form>
+        </div>
+
+        <div class="order-info">
+          <div class="info-card">
+            <div class="info-icon">
+              <i class="fas fa-info-circle"></i>
+            </div>
+            <h3>Comment ça marche?</h3>
+            <ol>
+              <li>Remplissez le formulaire avec vos choix</li>
+              <li>Vérifiez le récapitulatif de votre commande</li>
+              <li>Envoyez votre commande</li>
+              <li>Présentez votre numéro de billet au comptoir</li>
+              <li>Récupérez votre commande quand elle sera prête</li>
+            </ol>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <h3>Temps d'attente</h3>
+            <p>Le temps d'attente estimé est de <strong>10-15 minutes</strong> selon l'affluence.</p>
+            <p>Vous pouvez vérifier le statut de votre commande sur les écrans au comptoir.</p>
+          </div>
+
+          <div class="info-card">
+            <div class="info-icon">
+              <i class="fas fa-phone-alt"></i>
+            </div>
+            <h3>Besoin d'aide?</h3>
+            <p>Pour toute question concernant votre commande, contactez-nous:</p>
+            <p><i class="fas fa-phone"></i> 07.49.74.28.89</p>
+            <p><i class="fas fa-envelope"></i> commandes@abeeso.com</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <h3><i class="fas fa-drum"></i> ABEESO EKOLEKPAN</h3>
+          <p>Soirée Culturelle Africaine</p>
+        </div>
+
+        <div class="footer-links">
+          <a href="index.html"><i class="fas fa-home"></i> Accueil</a>
+          <a href="index.html#a-propos"><i class="fas fa-info-circle"></i> À propos</a>
+          <a href="index.html#menu"><i class="fas fa-utensils"></i> Menu</a>
+          <a href="index.html#contact"><i class="fas fa-envelope"></i> Contact</a>
+        </div>
+
+        <div class="footer-social">
+          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+          <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 Soirée Culturelle Africaine. Tous droits réservés.</p>
+        <div class="footer-legal">
+          <a href="#"><i class="fas fa-gavel"></i> Mentions légales</a>
+          <a href="#"><i class="fas fa-shield-alt"></i> Politique de confidentialité</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script src="order.js"></script>
+</body>
+
+</html>

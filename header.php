@@ -16,23 +16,17 @@
             </li>
 
             <?php
-            /*
+
             if (isset($_SESSION['user'])) { ?>
-                <li><a href="dashboard.php"><i class="fas fa-chart-line"></i>Tableau de bord</a></li>
+                <li><a href="dashboard.php"><i class="fas fa-table-columns"></i>Tableau de bord</a></li>
                 <li><a href="api/script.php?action=logout"><i class="fas fa-left-to-bracke"></i> Déconnexion</a></li>
             <?php } else { ?>
                 <li>
-                    <a href="login.php"><i class="fas fa-angle-right"></i> Connexion</a>
+                    <a href="login.php"><i class="fas fa-right-to-bracket"></i> Connexion</a>
                 </li>
-            <?php } 
-            
-            */ ?>
+            <?php }
 
-            <li><a href="dashboard.php"><i class="fas fa-table-columns"></i>Tableau de bord</a></li>
-            <li>
-                <a href="login.php"><i class="fas fa-right-to-bracket"></i> Connexion</a>
-            </li>
-
+            ?>
         </ul>
 
 
