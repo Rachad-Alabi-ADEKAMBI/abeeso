@@ -1,0 +1,29 @@
+<option value="" disabled selected>Sélectionnez un plat ou une boisson</option>
+<optgroup label="Plats">
+  <option value="Brochette de boeuf">Brochette de boeuf</option>
+  <option value="Poisson Daurade braisé">Poisson Daurade braisé</option>
+  <option value="Cuisse de poulet">Cuisse de poulet</option>
+  <option value="Monyo">Monyo (Poulet, Poisson, Aileron)</option>
+</optgroup>
+<optgroup label="Accompagnements">
+  <option value="Ablo">Ablo</option>
+  <option value="Alloco">Alloco</option>
+  <option value="Akassa">Akassa</option>
+  <option value="Riz blanc">Riz blanc</option>
+</optgroup>
+<optgroup label="Boissons sans alcool">
+  <option value="Café">Café</option>
+  <option value="Eau 50cl">Eau 50cl</option>
+  <option value="Jus de Fruits">Jus de Fruits</option>
+  <option value="Soda">Soda (Coca, Fanta)</option>
+  <option value="Energy Drink">Energy Drink / Panaché</option>
+  <option value="Jus de Bissape">Jus de Bissape</option>
+  <option value="Jus de Gingembre">Jus de Gingembre</option>
+</optgroup>
+<optgroup label="Boissons avec alcool">
+  <option value="Heineken">Heineken</option>
+  <option value="Desperados">Desperados</option>
+  <option value="Guinness">Guinness</option>
+  <option value="Vodka">Vodka, Whisky</option>
+  <option value="Vin Muscador">Vin Muscador</option>
+</optgroup>

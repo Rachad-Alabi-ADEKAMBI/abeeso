@@ -1,42 +1,46 @@
+<?php
+function verifyInput($inputContent)
+{
+  $inputContent = htmlspecialchars($inputContent);
+  $inputContent = trim($inputContent);
+  return $inputContent;
+}
+
+include 'api/db.php';
+
+$menu_id = verifyInput($_GET['menu_id']);
+
+$pdo = getConnexion();
+
+$stmt = $pdo->prepare("SELECT * FROM menu WHERE id = ?");
+$stmt->execute([$menu_id]);
+$datas = $stmt->fetch();
+
+$menu_price = $datas['price'];
+
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Commander - Soirée Culturelle Africaine</title>
-  <link rel="stylesheet" href="styles.css">
+
+  <?php include 'meta.php'; ?>
+
   <link rel="stylesheet" href="dashboard.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
 </head>
 
 <body>
   <!-- Navigation -->
-  <nav class="navbar">
-    <div class="container">
-      <div class="logo">
-        <i class="fas fa-drum"></i> ABEESO
-      </div>
-      <ul class="nav-links">
-        <li><a href="index.html"><i class="fas fa-home"></i> Accueil</a></li>
-        <li><a href="index.html#a-propos"><i class="fas fa-info-circle"></i> À propos</a></li>
-        <li><a href="index.html#menu"><i class="fas fa-utensils"></i> Menu</a></li>
-        <li><a href="index.html#contact"><i class="fas fa-envelope"></i> Contact</a></li>
-        <li><a href="login.html"><i class="fas fa-user"></i> Connexion</a></li>
-        <li><a href="commande.html" class="active"><i class="fas fa-shopping-cart"></i> Commander</a></li>
-        <li><a href="dashboard.html"><i class="fas fa-chart-line"></i> Dashboard</a></li>
-      </ul>
-      <div class="hamburger">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-  </nav>
+  <?php include 'header.php'; ?>
 
   <!-- Order Form Section -->
-  <section class="order-section">
+  <section class="order-section" id="app">
     <div class="container">
       <h2 class="section-title"><i class="fas fa-utensils"></i> Commander</h2>
 
@@ -47,41 +51,21 @@
             <p>Commandez vos plats et boissons pour la soirée</p>
           </div>
 
-          <form id="order-form" class="order-form">
+          <form id="order-form" class="order-form" @submit.prevent="submitOrder">
             <div class="form-group">
-              <label for="food-name"><i class="fas fa-hamburger"></i> Nom du plat/boisson</label>
-              <select id="food-name" name="food-name" required>
-                <option value="" disabled selected>Sélectionnez un plat ou une boisson</option>
-                <optgroup label="Plats">
-                  <option value="Brochette de boeuf">Brochette de boeuf</option>
-                  <option value="Poisson Daurade braisé">Poisson Daurade braisé</option>
-                  <option value="Cuisse de poulet">Cuisse de poulet</option>
-                  <option value="Monyo">Monyo (Poulet, Poisson, Aileron)</option>
-                </optgroup>
-                <optgroup label="Accompagnements">
-                  <option value="Ablo">Ablo</option>
-                  <option value="Alloco">Alloco</option>
-                  <option value="Akassa">Akassa</option>
-                  <option value="Riz blanc">Riz blanc</option>
-                </optgroup>
-                <optgroup label="Boissons sans alcool">
-                  <option value="Café">Café</option>
-                  <option value="Eau 50cl">Eau 50cl</option>
-                  <option value="Jus de Fruits">Jus de Fruits</option>
-                  <option value="Soda">Soda (Coca, Fanta)</option>
-                  <option value="Energy Drink">Energy Drink / Panaché</option>
-                  <option value="Jus de Bissape">Jus de Bissape</option>
-                  <option value="Jus de Gingembre">Jus de Gingembre</option>
-                </optgroup>
-                <optgroup label="Boissons avec alcool">
-                  <option value="Heineken">Heineken</option>
-                  <option value="Desperados">Desperados</option>
-                  <option value="Guinness">Guinness</option>
-                  <option value="Vodka">Vodka, Whisky</option>
-                  <option value="Vin Muscador">Vin Muscador</option>
-                </optgroup>
-              </select>
-              <div class="form-error" id="food-name-error"></div>
+              <label for="menu-name"><i class="fas fa-hamburger"></i> Nom du plat/boisson</label>
+              <p id="menu-name" name="menu-name">
+                <?= $datas['name'] ?>
+              </p>
+              <div class="form-error" id="menu-name-error"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="menu-name"><i class="fas fa-ticket-alt"></i> Prix</label>
+              <p id="menu-name" name="menu-name">
+                <?= $datas['price'] ?> €
+              </p>
+              <div class="form-error" id="menu-name-error"></div>
             </div>
 
             <div class="form-group">
@@ -95,28 +79,36 @@
             </div>
 
             <div class="form-group">
-              <label for="ticket-number"><i class="fas fa-ticket-alt"></i> Numéro de billet</label>
-              <input type="text" id="ticket-number" name="ticket-number" placeholder="Ex: A123" required>
+              <label for="ticket-number"><i class="fas fa-ticket-alt"></i> Numéro du ticket</label>
+              <input type="number" id="ticket-number" name="ticket-number" placeholder="Ex: 001" v-model="ticket" required>
               <div class="form-error" id="ticket-number-error"></div>
             </div>
 
             <div class="order-summary">
               <h4><i class="fas fa-receipt"></i> Récapitulatif</h4>
               <div class="summary-item">
-                <span>Article:</span>
-                <span id="summary-item">-</span>
+                <span>Intitulé:</span>
+                <span id="summary-item">
+                  {{ menu_name }}
+                </span>
               </div>
               <div class="summary-item">
                 <span>Quantité:</span>
-                <span id="summary-quantity">1</span>
+                <span id="summary-quantity">
+                  {{ quantity }}
+                </span>
               </div>
               <div class="summary-item">
                 <span>Prix unitaire:</span>
-                <span id="summary-price">-</span>
+                <span id="summary-price">
+                  {{ menu_price }} €
+                </span>
               </div>
               <div class="summary-item total">
                 <span>Total:</span>
-                <span id="summary-total">-</span>
+                <span id="summary-total">
+                  {{ (menu_price * quantity).toFixed(2) }} €
+                </span>
               </div>
             </div>
 
@@ -165,42 +157,55 @@
   </section>
 
   <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-content">
-        <div class="footer-logo">
-          <h3><i class="fas fa-drum"></i> ABEESO EKOLEKPAN</h3>
-          <p>Soirée Culturelle Africaine</p>
-        </div>
-
-        <div class="footer-links">
-          <a href="index.html"><i class="fas fa-home"></i> Accueil</a>
-          <a href="index.html#a-propos"><i class="fas fa-info-circle"></i> À propos</a>
-          <a href="index.html#menu"><i class="fas fa-utensils"></i> Menu</a>
-          <a href="index.html#contact"><i class="fas fa-envelope"></i> Contact</a>
-        </div>
-
-        <div class="footer-social">
-          <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
-          <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>&copy; 2025 Soirée Culturelle Africaine. Tous droits réservés.</p>
-        <div class="footer-legal">
-          <a href="#"><i class="fas fa-gavel"></i> Mentions légales</a>
-          <a href="#"><i class="fas fa-shield-alt"></i> Politique de confidentialité</a>
-        </div>
-      </div>
-    </div>
-  </footer>
+  <?php include 'footer.php'; ?>
 
   <script src="script.js"></script>
   <script src="order.js"></script>
+
+
+  <!-- À mettre à la fin de ton body -->
+  <script src="vue.global.js"></script>
+  <script src="axios.min.js"></script>
+
+  <script>
+    const {
+      createApp
+    } = Vue;
+
+    createApp({
+      data() {
+        return {
+          menu_name: <?= json_encode($datas['name']); ?>,
+          menu_id: <?= json_encode($menu_id); ?>,
+          menu_price: <?= json_encode($menu_price); ?>,
+          quantity: 1,
+          ticket: '',
+          errors: {}
+        };
+      },
+      methods: {
+        submitOrder() {
+          axios.post('api/api.php?action=newOrder', {
+              menu_id: this.menu_id,
+              menu_name: this.menu_name,
+              quantity: this.quantity,
+              total_amount: this.menu_price * this.quantity,
+              ticket: this.ticket
+            })
+            .then(response => {
+              alert("Commande envoyée !");
+            })
+            .catch(error => {
+              alert("Erreur lors de l'envoi de la commande.");
+            });
+        }
+      },
+      mounted() {
+        // alert("Vue.js est prêt !");
+      }
+    }).mount("#app");
+  </script>
+
 </body>
 
 </html>

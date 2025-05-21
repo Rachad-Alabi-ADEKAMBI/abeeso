@@ -1,6 +1,8 @@
 <?php
 
-ini_set("display_errors", "off");
+ini_set("display_errors", "1");
+ini_set("display_startup_errors", "1");
+error_reporting(E_ALL);
 
 session_start();
 
@@ -35,7 +37,7 @@ if (isset($_SESSION['user'])) {
   <?php include 'header.php'; ?>
 
   <!-- Login Section -->
-  <section class="login-section" id="app">
+  <section class="login-section">
     <div class="login-container">
       <div class="login-card">
         <div class="login-header">
@@ -46,18 +48,19 @@ if (isset($_SESSION['user'])) {
           <p>Accédez à votre espace personnel</p>
         </div>
 
-        <form method="post" action="api/api.php?action=register"
+        <form method="POST" action="api/api.php?action=login"
           class="login-form" id="login-form">
           <div class="form-group">
             <label for="username"><i class="fas fa-user"></i> Nom d'utilisateur</label>
-            <input type="text" id="username" name="username" value="<?= $_SESSION['login']['username'] ?>" required>
+            <input type="text" id="username" name="username"
+              value="<?= isset($_SESSION['login']['username']) ? $_SESSION['login']['username'] : '' ?>" required>
 
           </div>
 
           <div class="form-group">
             <label for="password"><i class="fas fa-lock"></i> Mot de passe</label>
             <div class="password-input-container">
-              <input v-model="password" type="password" id="password" name="password" required />
+              <input type="password" id="password" name="password" required />
               <button type="button" class="toggle-password" id="toggle-password">
                 <i class="fas fa-eye"></i>
               </button>
@@ -99,11 +102,6 @@ if (isset($_SESSION['user'])) {
   <?php include 'footer.php'; ?>
 
   <script src="script.js"></script>
-  <script src="login.js"></script>
-
-
-  <!-- Vue.js local -->
-  <script src="vue.global.js"></script>
 
 
 </body>

@@ -156,7 +156,7 @@
             <div class="menu-item">
               <div class="menu-item-image">
                 <img
-                  src="public/images/brochette.jpg"
+                  src="public/images/brochettes.png"
                   alt="Brochette de boeuf" />
                 <div class="menu-item-badge">
                   <i class="fas fa-fire"></i> Populaire
@@ -177,7 +177,7 @@
             <div class="menu-item">
               <div class="menu-item-image">
                 <img
-                  src="public/images/poisson.jpg"
+                  src="public/images/poisson_daurade.png"
                   alt="Poisson Daurade braisé" />
               </div>
               <div class="menu-item-info">
@@ -194,7 +194,7 @@
 
             <div class="menu-item">
               <div class="menu-item-image">
-                <img src="public/images/poulet.jpg" alt="Cuisse de poulet" />
+                <img src="public/images/alloco.png" alt="Cuisse de poulet" />
               </div>
               <div class="menu-item-info">
                 <h5>Cuisse de poulet</h5>
@@ -210,7 +210,7 @@
 
             <div class="menu-item">
               <div class="menu-item-image">
-                <img src="public/images/monyo.jpg" alt="Monyo" />
+                <img src="public/images/moyo.png" alt="Monyo" />
                 <div class="menu-item-badge">
                   <i class="fas fa-star"></i> Spécialité
                 </div>
@@ -235,7 +235,7 @@
 
             <div class="menu-item">
               <div class="menu-item-image">
-                <img src="public/images/ablo.jpg" alt="Ablo" />
+                <img src="public/images/moyo.png" alt="Ablo" />
               </div>
               <div class="menu-item-info">
                 <h5>Ablo</h5>
@@ -249,7 +249,7 @@
 
             <div class="menu-item">
               <div class="menu-item-image">
-                <img src="public/images/alloco.jpg" alt="Alloco" />
+                <img src="public/images/alloco.png" alt="Alloco" />
                 <div class="menu-item-badge">
                   <i class="fas fa-fire"></i> Populaire
                 </div>
@@ -266,7 +266,7 @@
 
             <div class="menu-item">
               <div class="menu-item-image">
-                <img src="public/images/akassa.jpg" alt="Akassa" />
+                <img src="public/images/moyo.png" alt="Akassa" />
               </div>
               <div class="menu-item-info">
                 <h5>Akassa</h5>

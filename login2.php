@@ -115,6 +115,7 @@
                 }
             },
             mounted() {
+                alert('ok');
                 this.loginError = null
                 document.getElementById('login-form-submit').addEventListener('click', () => {
                     // Make API call to login endpoint here
