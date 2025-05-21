@@ -19,10 +19,12 @@
 
             if (isset($_SESSION['user'])) { ?>
                 <li><a href="dashboard.php"><i class="fas fa-table-columns"></i>Tableau de bord</a></li>
-                <li><a href="api/script.php?action=logout"><i class="fas fa-left-to-bracke"></i> Déconnexion</a></li>
+                <li><a href="api/api.php?action=logout"><i class="fas fa-sign-out-alt"></i>
+                        Déconnexion</a></li>
             <?php } else { ?>
                 <li>
-                    <a href="login.php"><i class="fas fa-right-to-bracket"></i> Connexion</a>
+                    <a href="login.php"><i class="fas fa-sign-in-alt"></i>
+                        Connexion</a>
                 </li>
             <?php }
 

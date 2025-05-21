@@ -16,6 +16,16 @@ $stmt = $pdo->prepare("SELECT * FROM menu WHERE id = ?");
 $stmt->execute([$menu_id]);
 $datas = $stmt->fetch();
 
+if (!$datas) {
+  echo "
+      <script>
+          alert('Menu non trouvé ! Veuillez rescanner le QR code.');
+          window.location.href = 'index.php';
+      </script>
+  ";
+  exit(); // Très important pour arrêter l'exécution PHP ici
+}
+
 $menu_price = $datas['price'];
 
 ?>
@@ -30,8 +40,6 @@ $menu_price = $datas['price'];
   <?php include 'meta.php'; ?>
 
   <link rel="stylesheet" href="dashboard.css">
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
 
 </head>
 
@@ -55,7 +63,7 @@ $menu_price = $datas['price'];
             <div class="form-group">
               <label for="menu-name"><i class="fas fa-hamburger"></i> Nom du plat/boisson</label>
               <p id="menu-name" name="menu-name">
-                <?= $datas['name'] ?>
+                <strong> <?= $datas['name'] ?></strong>
               </p>
               <div class="form-error" id="menu-name-error"></div>
             </div>
@@ -63,7 +71,7 @@ $menu_price = $datas['price'];
             <div class="form-group">
               <label for="menu-name"><i class="fas fa-ticket-alt"></i> Prix</label>
               <p id="menu-name" name="menu-name">
-                <?= $datas['price'] ?> €
+                <strong><?= $datas['price'] ?> €</strong>
               </p>
               <div class="form-error" id="menu-name-error"></div>
             </div>
@@ -71,18 +79,27 @@ $menu_price = $datas['price'];
             <div class="form-group">
               <label for="quantity"><i class="fas fa-sort-amount-up-alt"></i> Quantité</label>
               <div class="quantity-input">
-                <button type="button" class="quantity-btn minus"><i class="fas fa-minus"></i></button>
-                <input type="number" id="quantity" name="quantity" min="1" value="1" required>
-                <button type="button" class="quantity-btn plus"><i class="fas fa-plus"></i></button>
+                <select id="quantity" name="quantity" v-model="quantity" required>
+                  <option value="" disabled selected>Choisissez une quantité</option>
+                  <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
+                </select>
               </div>
               <div class="form-error" id="quantity-error"></div>
             </div>
 
+
             <div class="form-group">
               <label for="ticket-number"><i class="fas fa-ticket-alt"></i> Numéro du ticket</label>
-              <input type="number" id="ticket-number" name="ticket-number" placeholder="Ex: 001" v-model="ticket" required>
-              <div class="form-error" id="ticket-number-error"></div>
+              <input
+                type="number"
+                id="ticket-number"
+                name="ticket_id"
+                placeholder="Ex: 001"
+                v-model="ticket_id"
+                @input="preventNegativeTicket"
+                required>
             </div>
+
 
             <div class="order-summary">
               <h4><i class="fas fa-receipt"></i> Récapitulatif</h4>
@@ -125,11 +142,9 @@ $menu_price = $datas['price'];
             </div>
             <h3>Comment ça marche?</h3>
             <ol>
-              <li>Remplissez le formulaire avec vos choix</li>
-              <li>Vérifiez le récapitulatif de votre commande</li>
-              <li>Envoyez votre commande</li>
-              <li>Présentez votre numéro de billet au comptoir</li>
-              <li>Récupérez votre commande quand elle sera prête</li>
+              <li>Le QR code que vous venez de scanner correspond au menu souhaité</li>
+              <li>Renseignez la quantité souhaité et le numéro de votre ticket</li>
+              <li>Vérifiez le récapitulatif de votre commande et validez la commande</li>
             </ol>
           </div>
 
@@ -139,7 +154,6 @@ $menu_price = $datas['price'];
             </div>
             <h3>Temps d'attente</h3>
             <p>Le temps d'attente estimé est de <strong>10-15 minutes</strong> selon l'affluence.</p>
-            <p>Vous pouvez vérifier le statut de votre commande sur les écrans au comptoir.</p>
           </div>
 
           <div class="info-card">
@@ -149,7 +163,7 @@ $menu_price = $datas['price'];
             <h3>Besoin d'aide?</h3>
             <p>Pour toute question concernant votre commande, contactez-nous:</p>
             <p><i class="fas fa-phone"></i> 07.49.74.28.89</p>
-            <p><i class="fas fa-envelope"></i> commandes@abeeso.com</p>
+            <p><i class="fas fa-envelope"></i> commandes@abeeso-ekolepkan.com</p>
           </div>
         </div>
       </div>
@@ -163,7 +177,7 @@ $menu_price = $datas['price'];
   <script src="order.js"></script>
 
 
-  <!-- À mettre à la fin de ton body -->
+  <!-- vue and axios -->
   <script src="vue.global.js"></script>
   <script src="axios.min.js"></script>
 
@@ -179,32 +193,54 @@ $menu_price = $datas['price'];
           menu_id: <?= json_encode($menu_id); ?>,
           menu_price: <?= json_encode($menu_price); ?>,
           quantity: 1,
-          ticket: '',
+          ticket_id: '',
           errors: {}
         };
       },
+      computed: {
+        totalAmount() {
+          return (this.menu_price * this.quantity).toFixed(2);
+        }
+      },
       methods: {
+        preventNegativeTicket() {
+          if (this.ticket_id < 0) {
+            this.ticket_id = 0;
+          }
+        },
         submitOrder() {
+          if (!this.ticket_id || this.quantity < 1) {
+            alert("Veuillez remplir correctement tous les champs.");
+            return;
+          }
+
           axios.post('api/api.php?action=newOrder', {
               menu_id: this.menu_id,
               menu_name: this.menu_name,
               quantity: this.quantity,
               total_amount: this.menu_price * this.quantity,
-              ticket: this.ticket
+              ticket_id: this.ticket_id
             })
             .then(response => {
-              alert("Commande envoyée !");
+              if (response.data.success) {
+                alert("Commande envoyée !");
+                // Réinitialiser si nécessaire
+                this.quantity = 1;
+                this.ticket_id = '';
+                window.location.replace('index.php');
+              } else {
+                alert(response.data.message || "Erreur lors de l'envoi.");
+              }
             })
             .catch(error => {
-              alert("Erreur lors de l'envoi de la commande.");
+              console.error(error);
+              alert("Erreur serveur.");
             });
         }
-      },
-      mounted() {
-        // alert("Vue.js est prêt !");
       }
     }).mount("#app");
   </script>
+
 
 </body>
 

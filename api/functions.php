@@ -3,26 +3,69 @@ session_start();
 include 'db.php';
 
 
-function newsletters()
+function getOrders()
 {
-    $pdo = getConnexion();
-    $req = $pdo->prepare("
-        SELECT n1.*
-        FROM newsletters n1
-        JOIN (
-            SELECT username, MAX(id) AS max_id
-            FROM newsletters
-            WHERE username IS NOT NULL
-            GROUP BY username
-        ) n2 ON n1.username = n2.username AND n1.id = n2.max_id
-        ORDER BY n1.id DESC
-    ");
-    $req->execute();
-    $datas = $req->fetchAll(PDO::FETCH_ASSOC);
-    $req->closeCursor();
+    try {
+        $pdo = getConnexion();
+        $req = $pdo->prepare("
+            SELECT *
+            FROM orders 
+            ORDER BY id DESC
+        ");
+        $req->execute();
+        $datas = $req->fetchAll(PDO::FETCH_ASSOC);
+        $req->closeCursor();
 
-    sendJSON($datas);
+        // Réponse structurée pour Axios
+        echo json_encode([
+            'success' => true,
+            'data' => $datas
+        ]);
+    } catch (Exception $e) {
+        // En cas d'erreur
+        echo json_encode([
+            'success' => false,
+            'message' => 'Erreur serveur : ' . $e->getMessage()
+        ]);
+    }
 }
+
+function serveOrder()
+{
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        sendJSON(['success' => false, 'message' => 'Méthode non autorisée'], 405);
+        return;
+    }
+
+    $data = json_decode(file_get_contents("php://input"), true);
+    if (!isset($data['orderId'])) {
+        sendJSON(['success' => false, 'message' => 'ID de commande manquant'], 400);
+        return;
+    }
+
+    $orderId = intval($data['orderId']);
+    $pdo = getConnexion();
+
+    // Vérifie si la commande existe
+    $check = $pdo->prepare("SELECT * FROM orders WHERE id = ?");
+    $check->execute([$orderId]);
+    if ($check->rowCount() === 0) {
+        sendJSON(['success' => false, 'message' => 'Commande introuvable'], 404);
+        return;
+    }
+
+    // Met à jour le statut
+    $update = $pdo->prepare("UPDATE orders SET status = 'delivered' WHERE id = ?");
+    $success = $update->execute([$orderId]);
+
+    if ($success) {
+        sendJSON(['success' => true, 'message' => 'Commande mise à jour avec succès']);
+    } else {
+        sendJSON(['success' => false, 'message' => 'Échec de la mise à jour']);
+    }
+}
+
+
 
 
 function login()
